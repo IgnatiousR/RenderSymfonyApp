@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Running composer"
-composer install --no-dev --optimize-autoloader --working-dir=/var/www/html
+composer install --no-dev --optimize-autoloader
 
 # Warm up cache
 php bin/console cache:warmup
