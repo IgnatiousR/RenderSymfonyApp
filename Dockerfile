@@ -32,8 +32,9 @@ COPY . .
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
+
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# RUN composer install --no-dev --optimize-autoloader
 
 # Configure Apache
 RUN a2enmod rewrite
@@ -43,10 +44,12 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 RUN chown -R www-data:www-data /var/www/html/var
 
 # Warm up cache
-RUN php bin/console cache:warmup
+# RUN php bin/console cache:warmup
 
 # Expose port
 EXPOSE 80
 
+
+CMD ["/start.sh", "apache2-foreground"]
 # Start Apache
-CMD ["apache2-foreground"]
+# CMD ["apache2-foreground"]
