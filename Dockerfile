@@ -30,6 +30,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . .
 
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
