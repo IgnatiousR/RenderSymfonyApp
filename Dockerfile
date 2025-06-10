@@ -1,7 +1,7 @@
 FROM richarvey/nginx-php-fpm:latest
 
 COPY . .
-
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Image config
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
