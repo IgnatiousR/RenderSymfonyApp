@@ -1,55 +1,18 @@
-# Use official PHP image with Apache
-FROM php:8.2-apache
+FROM richarvey/nginx-php-fpm:latest
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    zip \
-    unzip \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpq-dev \
-    && docker-php-ext-install \
-    pdo_mysql \
-    pdo_pgsql \
-    zip \
-    mbstring \
-    exif \
-    pcntl \
-    gd \
-    sockets
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy application files
 COPY . .
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
+# Image config
+ENV SKIP_COMPOSER 1
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
+ENV REAL_IP_HEADER 1
 
+# Symfony config
+ENV APP_ENV prod
 
-# Install PHP dependencies
-# RUN composer install --no-dev --optimize-autoloader
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Configure Apache
-RUN a2enmod rewrite
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/var
-
-# Warm up cache
-# RUN php bin/console cache:warmup
-
-# Expose port
-EXPOSE 80
-
-
-CMD ["/start.sh", "apache2-foreground"]
-# Start Apache
-# CMD ["apache2-foreground"]
+CMD ["/start.sh"]
